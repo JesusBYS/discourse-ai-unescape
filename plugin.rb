@@ -1,23 +1,24 @@
 # name: discourse-ai-unescape
-# about: Unescapes \u003e in bot posts so Markdown quotes stay clean
-# version: 0.1
+# about: Fixes escaped markdown quotes (\u003e) in posts
+# version: 1.0
 # authors: You
-# url: https://github.com/<YOU>/discourse-ai-unescape
-
-enabled_site_setting :ai_unescape_enabled
+# url: https://github.com/JesusBYS/discourse-ai-unescape
 
 after_initialize do
-  DiscourseEvent.on(:post_created) do |post, _opts, _user|
-    next unless SiteSetting.ai_unescape_enabled
-    next if post.blank? || post.raw.blank? || post.user.blank?
-    next unless post.user.bot?
+  def fix_markdown_quotes(post)
+    return if post.blank? || post.raw.blank?
 
     raw = post.raw
-    fixed = raw.gsub('\\u003e', '>')
 
-    next if fixed == raw
+    # Corrige \u003e et \\u003e
+    fixed = raw.gsub(/\\\\u003e|\\u003e/, ">")
+
+    return if fixed == raw
 
     post.update_columns(raw: fixed)
     post.rebake!
   end
+
+  DiscourseEvent.on(:post_created) { |post, *_| fix_markdown_quotes(post) }
+  DiscourseEvent.on(:post_edited)  { |post, *_| fix_markdown_quotes(post) }
 end
