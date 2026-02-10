@@ -1,0 +1,4 @@
+plugins:
+  ai_unescape_enabled:
+    default: true
+    client: false
