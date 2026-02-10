@@ -1,7 +1,7 @@
 # name: discourse-ai-unescape
 # about: Fixes escaped markdown quotes (\u003e) in posts
 # version: 1.0
-# authors: You
+# authors: JesusBYS
 # url: https://github.com/JesusBYS/discourse-ai-unescape
 
 after_initialize do
